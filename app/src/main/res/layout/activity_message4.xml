@@ -16,7 +16,7 @@
         android:layout_marginStart="41dp"
         android:layout_marginLeft="41dp"
         android:layout_marginBottom="125dp"
-        android:onClick="play"
+        android:id="@+id/play"
         android:text="Play" />
 
     <Button
@@ -25,8 +25,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="125dp"
-        android:onClick="pause"
-        android:text="Pause" />
+        android:text="Pause"
+        android:id="@+id/pause"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -37,8 +37,8 @@
         android:layout_marginEnd="41dp"
         android:layout_marginRight="41dp"
         android:layout_marginBottom="125dp"
-        android:onClick="stop"
-        android:text="Stop" />
+        android:text="Stop"
+        android:id="@+id/stop"/>
 
     <Button
         android:layout_width="wrap_content"

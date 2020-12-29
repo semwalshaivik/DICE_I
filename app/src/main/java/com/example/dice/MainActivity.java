@@ -1,8 +1,6 @@
 package com.example.dice;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -15,38 +13,32 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.util.Random;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+//import com.google.android.gms.location.FusedLocationProviderClient;
+//import com.google.android.gms.location.LocationServices;
+//import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MainActivity extends AppCompatActivity {
+    ResourceFunctions resourceFunctions = new ResourceFunctions();
     public int y=0;
     public static final int PERMISSION_REQUEST=0;
     public static final int RESULT_LOAD_IMAGE=1;
-    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView imageView;
     Button button2;
+    Button play;
+    Button pause;
+    Button stop;
     MediaPlayer player;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-    private FusedLocationProviderClient client;
+    /*private FusedLocationProviderClient client;
     public void gpsGetter(View view) {
         setContentView(R.layout.activity_get_gps);
         requestPermission();
@@ -54,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Button button = findViewById(R.id.getLocation);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
                     return;
                 }
@@ -66,45 +58,13 @@ public class MainActivity extends AppCompatActivity {
                             textView.setText(o.toString());
                         }
                     }
-
-
-
                 });
             }
         });
     }
     private void requestPermission(){
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
-    }
-    public void alertGetter(View view) {
-        setContentView(R.layout.activity_get_alert);
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage(R.string.camera);
-        builder.setPositiveButton(R.string.open, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                openCamera(view);
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                showDice(view);
-            }
-        });
-        AlertDialog alert=builder.create();
-        alert.show();
-    }
-    public void videoGetter(View view) {
-        setContentView(R.layout.activity_play_video);
-        VideoView videoView = findViewById(R.id.videoView);
-        String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.the_tale_of_jiraiya_the_gallant;
-        Uri uri = Uri.parse(videoPath);
-        videoView.setVideoURI(uri);
-        MediaController mediaController = new MediaController(this);
-        videoView.setMediaController(mediaController);
-        mediaController.setAnchorView(mediaController);
-    }
+    }*/
     public void imageGetter(View view)
     {
         setContentView(R.layout.activity_get_image);
@@ -116,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         }
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
             }
@@ -145,82 +105,130 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-    public void showDice(View view){
-        setContentView(R.layout.activity_main);
-    }
-    public void openCamera(View view){
-        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-    }
-    public void play(View view) {
-        if(player == null) {
-            player = MediaPlayer.create(this, R.raw.jiraiya_theme);
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    playerRelease();
-                }
-            });
-        }
-        player.start();
-    }
-    public void  pause(View view) {
-        if(player != null)
-            player.pause();
-    }
-    public void stop(View view) {
-        playerRelease();
-    }
-    private void playerRelease() {
-        if(player != null)
-            player.release();
-        player = null;
-    }
+//    public void showDice(View view){
+//        setContentView(R.layout.activity_main);
+//    }
+//    public void play(View view) {
+//        if(player == null) {
+//            player = MediaPlayer.create(this, R.raw.jiraiya_theme);
+//            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    playerRelease();
+//                }
+//            });
+//        }
+//        player.start();
+//    }
+//    public void  pause(View view) {
+//        if(player != null)
+//            player.pause();
+//    }
+//    public void stop(View view) {
+//        resourceFunctions.playerRelease();
+//    }
+//    void playerRelease() {
+//        if(player != null)
+//            player.release();
+//        player = null;
+//    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        playerRelease();
+        resourceFunctions.playerRelease();
     }
-    public int random() {
-        Random n = new Random();
-        return(n.nextInt(5)+1);
-    }
+//    public int random() {
+//        Random n = new Random();
+//        return(n.nextInt(5)+1);
+//    }
 
     public void changeImage(View view){
         if(player!=null)
-            playerRelease();
-        int x = random();
+            resourceFunctions.playerRelease();
+        int x = resourceFunctions.random();
         if(y==0) {
             if (x == 1)
                 imageGetter(view);
-            if (x == 2)
-                videoGetter(view);
-            if (x == 3)
-                alertGetter(view);
-            if (x == 4)
+            if (x == 2) {
+                setContentView(R.layout.activity_play_video);
+                resourceFunctions.videoGetter(MainActivity.this);
+            }
+            if (x == 3) {
+                setContentView(R.layout.activity_get_alert);
+                resourceFunctions.alertGetter(MainActivity.this);
+            }
+            if (x == 4) {
                 setContentView(R.layout.activity_message4);
+                play = (Button) findViewById(R.id.play);
+                pause = (Button) findViewById(R.id.pause);
+                stop = (Button) findViewById(R.id.stop);
+                play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        resourceFunctions.play(MainActivity.this);
+                    }
+                });
+                pause.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        resourceFunctions.pause();
+                    }
+                });
+
+                stop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        resourceFunctions.stop();
+                    }
+                });
+            }
             if (x == 5)
                 setContentView(R.layout.activity_thankyou);
-            if (x == 6)
-                gpsGetter();
+            //if (x == 6)
+                //gpsGetter(view);
             y = x;
         }
         else
         {
             while(x==y)
-                x = random();
+                x = resourceFunctions.random();
             if (x == 1)
                 imageGetter(view);
-            if (x == 2)
-                videoGetter(view);
-            if (x == 3)
-                alertGetter(view);
-            if (x == 4)
+            if (x == 2) {
+                setContentView(R.layout.activity_play_video);
+                resourceFunctions.videoGetter(MainActivity.this);
+            }
+            if (x == 3) {
+                setContentView(R.layout.activity_get_alert);
+                resourceFunctions.alertGetter(MainActivity.this);
+            }
+            if (x == 4) {
                 setContentView(R.layout.activity_message4);
+
+                play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        resourceFunctions.play(MainActivity.this);
+                    }
+                });
+                pause.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        resourceFunctions.pause();
+                    }
+                });
+                stop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        resourceFunctions.stop();
+                    }
+                });
+            }
             if (x == 5)
                 setContentView(R.layout.activity_thankyou);
-            if(x == 6)
-                gpsGetter();
+            //if(x == 6)
+                //gpsGetter(view);
             y=x;
         }
     }
